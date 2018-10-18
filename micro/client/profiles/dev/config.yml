@@ -39,7 +39,9 @@ registry:
     basic:
         type : "zookeeper"
         reg_addr : "127.0.0.1:2181"
+        # type : "etcd"
+        # reg_addr : "127.0.0.1:2379"
         # 与 registry 之间的 lease 时长
         keepalive_timeout : 10
-        root : "/getty"
+        root : "/getty-micro"
     group : "bj-yizhuang"

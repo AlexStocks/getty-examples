@@ -30,9 +30,11 @@ registry:
     basic:
         type : "zookeeper"
         reg_addr : "127.0.0.1:2181"
+        # type : "etcd"
+        # reg_addr : "127.0.0.1:2379"
         # 与 registry 之间的 lease 时长
         keepalive_timeout : 10
-        root : "/getty"
+        root : "/getty-micro"
     service_array:
         -
             local_host : "127.0.0.1"
@@ -42,6 +44,7 @@ registry:
             protocol : "protobuf"
             service : "TestService"
             version : "v1.0"
+            meta : '{"group_id":1, "node_id":0}'
 
         -
             local_host : "127.0.0.1"
@@ -51,6 +54,7 @@ registry:
             protocol : "protobuf"
             service : "TestService"
             version : "v1.0"
+            meta : '{"group_id":2, "node_id":0}'
 
         -
             local_host : "127.0.0.1"
@@ -60,6 +64,7 @@ registry:
             protocol : "json"
             service : "TestService"
             version : "v1.0"
+            meta : '{"group_id":1, "node_id":0}'
 
         -
             local_host : "127.0.0.1"
@@ -69,3 +74,4 @@ registry:
             protocol : "json"
             service : "TestService"
             version : "v1.0"
+            meta : '{"group_id":2, "node_id":1}'
