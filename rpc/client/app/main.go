@@ -21,7 +21,6 @@ import (
 )
 
 import (
-	"github.com/AlexStocks/getty-examples/rpc/proto"
 	"github.com/AlexStocks/getty/rpc"
 	"github.com/AlexStocks/goext/net"
 	log "github.com/AlexStocks/log4go"
@@ -110,12 +109,12 @@ func initSignal() {
 }
 
 func testJSON() {
-	ts := rpc_examples.TestService{}
-	testReq := rpc_examples.TestReq{"aaa", "bbb", "ccc"}
-	testRsp := rpc_examples.TestRsp{}
+	ts := TestService{}
+	testReq := TestReq{"aaa", "bbb", "ccc"}
+	testRsp := TestRsp{}
 	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
 
-	eventReq := rpc_examples.EventReq{A: "hello"}
+	eventReq := EventReq{A: "hello"}
 	err := client.CallOneway(rpc.CodecJson, addr, ts.Service(), "Event", &eventReq,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -132,8 +131,8 @@ func testJSON() {
 	}
 	log.Info("TestService::Test(Json, param:%#v) = res:%s", testReq, testRsp)
 
-	addReq := rpc_examples.AddReq{1, 10}
-	addRsp := rpc_examples.AddRsp{}
+	addReq := AddReq{1, 10}
+	addRsp := AddRsp{}
 	err = client.Call(rpc.CodecJson, addr, ts.Service(), "Add", &addReq, &addRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -142,8 +141,8 @@ func testJSON() {
 	}
 	log.Info("TestService::Add(Json, req:%#v) = res:%#v", addReq, addRsp)
 
-	errReq := rpc_examples.ErrReq{1}
-	errRsp := rpc_examples.ErrRsp{}
+	errReq := ErrReq{1}
+	errRsp := ErrRsp{}
 	err = client.Call(rpc.CodecJson, addr, ts.Service(), "Err", &errReq, &errRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -163,9 +162,9 @@ func Callback(rsp rpc.CallResponse) {
 }
 
 func testAsyncJSON() {
-	ts := rpc_examples.TestService{}
-	testReq := rpc_examples.TestReq{"aaa", "bbb", "ccc"}
-	testRsp := rpc_examples.TestRsp{}
+	ts := TestService{}
+	testReq := TestReq{"aaa", "bbb", "ccc"}
+	testRsp := TestRsp{}
 	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
 
 	err := client.AsyncCall(rpc.CodecJson, addr,
@@ -177,8 +176,8 @@ func testAsyncJSON() {
 		return
 	}
 
-	addReq := rpc_examples.AddReq{1, 10}
-	addRsp := rpc_examples.AddRsp{}
+	addReq := AddReq{1, 10}
+	addRsp := AddRsp{}
 	err = client.AsyncCall(rpc.CodecJson, addr,
 		ts.Service(), "Add", &addReq, Callback, &addRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),
@@ -188,8 +187,8 @@ func testAsyncJSON() {
 		return
 	}
 
-	errReq := rpc_examples.ErrReq{1}
-	errRsp := rpc_examples.ErrRsp{}
+	errReq := ErrReq{1}
+	errRsp := ErrRsp{}
 	err = client.AsyncCall(rpc.CodecJson, addr,
 		ts.Service(), "Err", &errReq, Callback, &errRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),
@@ -202,12 +201,12 @@ func testAsyncJSON() {
 }
 
 func testProtobuf() {
-	ts := rpc_examples.TestService{}
-	testReq := rpc_examples.TestReq{"aaa", "bbb", "ccc"}
-	testRsp := rpc_examples.TestRsp{}
+	ts := TestService{}
+	testReq := TestReq{"aaa", "bbb", "ccc"}
+	testRsp := TestRsp{}
 	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
 
-	eventReq := rpc_examples.EventReq{A: "hello"}
+	eventReq := EventReq{A: "hello"}
 	err := client.CallOneway(rpc.CodecProtobuf, addr, ts.Service(), "Event", &eventReq,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -224,8 +223,8 @@ func testProtobuf() {
 	}
 	log.Info("TestService::Test(protobuf, param:%#v) = res:%s", testReq, testRsp)
 
-	addReq := rpc_examples.AddReq{1, 10}
-	addRsp := rpc_examples.AddRsp{}
+	addReq := AddReq{1, 10}
+	addRsp := AddRsp{}
 	err = client.Call(rpc.CodecProtobuf, addr, ts.Service(), "Add", &addReq, &addRsp,
 		rpc.WithCallRequestTimeout(500e6), rpc.WithCallResponseTimeout(500e6))
 	if err != nil {
@@ -234,8 +233,8 @@ func testProtobuf() {
 	}
 	log.Info("TestService::Add(protobuf, req:%#v) = res:%#v", addReq, addRsp)
 
-	errReq := rpc_examples.ErrReq{1}
-	errRsp := rpc_examples.ErrRsp{}
+	errReq := ErrReq{1}
+	errRsp := ErrRsp{}
 	err = client.Call(rpc.CodecProtobuf, addr, ts.Service(), "Err", &errReq, &errRsp,
 		rpc.WithCallRequestTimeout(500e6), rpc.WithCallResponseTimeout(500e6))
 	if err != nil {
@@ -247,9 +246,9 @@ func testProtobuf() {
 }
 
 func testAsyncProtobuf() {
-	ts := rpc_examples.TestService{}
-	testReq := rpc_examples.TestReq{"aaa", "bbb", "ccc"}
-	testRsp := rpc_examples.TestRsp{}
+	ts := TestService{}
+	testReq := TestReq{"aaa", "bbb", "ccc"}
+	testRsp := TestRsp{}
 	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
 
 	err := client.AsyncCall(rpc.CodecProtobuf, addr,
@@ -261,8 +260,8 @@ func testAsyncProtobuf() {
 		return
 	}
 
-	addReq := rpc_examples.AddReq{1, 10}
-	addRsp := rpc_examples.AddRsp{}
+	addReq := AddReq{1, 10}
+	addRsp := AddRsp{}
 	err = client.AsyncCall(rpc.CodecProtobuf, addr,
 		ts.Service(), "Add", &addReq, Callback, &addRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),
@@ -272,8 +271,8 @@ func testAsyncProtobuf() {
 		return
 	}
 
-	errReq := rpc_examples.ErrReq{1}
-	errRsp := rpc_examples.ErrRsp{}
+	errReq := ErrReq{1}
+	errRsp := ErrRsp{}
 	err = client.AsyncCall(rpc.CodecProtobuf, addr,
 		ts.Service(), "Err", &errReq, Callback, &errRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),

@@ -20,17 +20,20 @@ import (
 	"sync/atomic"
 	"syscall"
 	"time"
+)
 
-	"github.com/AlexStocks/getty-examples/micro/proto"
-	"github.com/AlexStocks/getty/micro"
-	"github.com/AlexStocks/getty/rpc"
+import (
 	"github.com/AlexStocks/goext/database/filter"
 	"github.com/AlexStocks/goext/database/registry"
 	"github.com/AlexStocks/goext/net"
 
 	log "github.com/AlexStocks/log4go"
-
 	jerrors "github.com/juju/errors"
+)
+
+import (
+	"github.com/AlexStocks/getty/micro"
+	"github.com/AlexStocks/getty/rpc"
 )
 
 const (
@@ -175,11 +178,11 @@ func initSignal() {
 }
 
 func testJSON() {
-	ts := micro_examples.TestService{}
+	ts := TestService{}
 
 	ctx := context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 2)
-	eventReq := micro_examples.EventReq{A: "hello"}
+	eventReq := EventReq{A: "hello"}
 	err := client.CallOneway(ctx, rpc.CodecJson, ts.Service(), ts.Version(), "Event", &eventReq,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -190,8 +193,8 @@ func testJSON() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 1)
-	testReq := micro_examples.TestReq{"aaa", "bbb", "ccc"}
-	testRsp := micro_examples.TestRsp{}
+	testReq := TestReq{"aaa", "bbb", "ccc"}
+	testRsp := TestRsp{}
 	err = client.Call(ctx, rpc.CodecJson, ts.Service(), ts.Version(), "Test", &testReq, &testRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -202,8 +205,8 @@ func testJSON() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 2)
-	addReq := micro_examples.AddReq{1, 10}
-	addRsp := micro_examples.AddRsp{}
+	addReq := AddReq{1, 10}
+	addRsp := AddRsp{}
 	err = client.Call(ctx, rpc.CodecJson, ts.Service(), ts.Version(), "Add", &addReq, &addRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -214,8 +217,8 @@ func testJSON() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 1)
-	errReq := micro_examples.ErrReq{1}
-	errRsp := micro_examples.ErrRsp{}
+	errReq := ErrReq{1}
+	errRsp := ErrRsp{}
 	err = client.Call(ctx, rpc.CodecJson, ts.Service(), ts.Version(), "Err", &errReq, &errRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -235,12 +238,12 @@ func Callback(rsp rpc.CallResponse) {
 }
 
 func testAsyncJSON() {
-	ts := micro_examples.TestService{}
+	ts := TestService{}
 
 	ctx := context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 1)
-	testReq := micro_examples.TestReq{"aaa", "bbb", "ccc"}
-	testRsp := micro_examples.TestRsp{}
+	testReq := TestReq{"aaa", "bbb", "ccc"}
+	testRsp := TestRsp{}
 	err := client.AsyncCall(ctx, rpc.CodecJson,
 		ts.Service(), ts.Version(), "Test", &testReq, Callback, &testRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),
@@ -252,8 +255,8 @@ func testAsyncJSON() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 2)
-	addReq := micro_examples.AddReq{1, 10}
-	addRsp := micro_examples.AddRsp{}
+	addReq := AddReq{1, 10}
+	addRsp := AddRsp{}
 	err = client.AsyncCall(ctx, rpc.CodecJson, ts.Service(),
 		ts.Version(), "Add", &addReq, Callback, &addRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),
@@ -265,8 +268,8 @@ func testAsyncJSON() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 1)
-	errReq := micro_examples.ErrReq{1}
-	errRsp := micro_examples.ErrRsp{}
+	errReq := ErrReq{1}
+	errRsp := ErrRsp{}
 	err = client.AsyncCall(ctx, rpc.CodecJson, ts.Service(),
 		ts.Version(), "Err", &errReq, Callback, &errRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),
@@ -279,11 +282,11 @@ func testAsyncJSON() {
 }
 
 func testProtobuf() {
-	ts := micro_examples.TestService{}
+	ts := TestService{}
 
 	ctx := context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 1)
-	eventReq := micro_examples.EventReq{A: "hello"}
+	eventReq := EventReq{A: "hello"}
 	err := client.CallOneway(ctx, rpc.CodecJson, ts.Service(), ts.Version(), "Event", &eventReq,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -294,8 +297,8 @@ func testProtobuf() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 2)
-	testReq := micro_examples.TestReq{"aaa", "bbb", "ccc"}
-	testRsp := micro_examples.TestRsp{}
+	testReq := TestReq{"aaa", "bbb", "ccc"}
+	testRsp := TestRsp{}
 	err = client.Call(ctx, rpc.CodecProtobuf, ts.Service(), ts.Version(), "Test", &testReq,
 		&testRsp, rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -306,8 +309,8 @@ func testProtobuf() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 1)
-	addReq := micro_examples.AddReq{1, 10}
-	addRsp := micro_examples.AddRsp{}
+	addReq := AddReq{1, 10}
+	addRsp := AddRsp{}
 	err = client.Call(ctx, rpc.CodecProtobuf, ts.Service(), ts.Version(), "Add", &addReq,
 		&addRsp, rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -318,8 +321,8 @@ func testProtobuf() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 2)
-	errReq := micro_examples.ErrReq{1}
-	errRsp := micro_examples.ErrRsp{}
+	errReq := ErrReq{1}
+	errRsp := ErrRsp{}
 	err = client.Call(ctx, rpc.CodecProtobuf, ts.Service(), ts.Version(), "Err", &errReq,
 		&errRsp, rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6))
 	if err != nil {
@@ -331,12 +334,12 @@ func testProtobuf() {
 }
 
 func testAsyncProtobuf() {
-	ts := micro_examples.TestService{}
+	ts := TestService{}
 
 	ctx := context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 1)
-	testReq := micro_examples.TestReq{"aaa", "bbb", "ccc"}
-	testRsp := micro_examples.TestRsp{}
+	testReq := TestReq{"aaa", "bbb", "ccc"}
+	testRsp := TestRsp{}
 	err := client.AsyncCall(ctx, rpc.CodecProtobuf,
 		ts.Service(), ts.Version(), "Test", &testReq, Callback, &testRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),
@@ -348,8 +351,8 @@ func testAsyncProtobuf() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 2)
-	addReq := micro_examples.AddReq{1, 10}
-	addRsp := micro_examples.AddRsp{}
+	addReq := AddReq{1, 10}
+	addRsp := AddRsp{}
 	err = client.AsyncCall(ctx, rpc.CodecProtobuf,
 		ts.Service(), ts.Version(), "Add", &addReq, Callback, &addRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),
@@ -361,8 +364,8 @@ func testAsyncProtobuf() {
 
 	ctx = context.WithValue(context.Background(), "seq", atomic.AddInt64(&seq, 1))
 	ctx = context.WithValue(ctx, "group_id", 1)
-	errReq := micro_examples.ErrReq{1}
-	errRsp := micro_examples.ErrRsp{}
+	errReq := ErrReq{1}
+	errRsp := ErrRsp{}
 	err = client.AsyncCall(ctx, rpc.CodecProtobuf,
 		ts.Service(), ts.Version(), "Err", &errReq, Callback, &errRsp,
 		rpc.WithCallRequestTimeout(100e6), rpc.WithCallResponseTimeout(100e6),

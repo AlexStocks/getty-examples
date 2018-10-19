@@ -19,7 +19,6 @@ import (
 )
 
 import (
-	"github.com/AlexStocks/getty-examples/micro/proto"
 	"github.com/AlexStocks/getty/micro"
 	"github.com/AlexStocks/goext/net"
 	log "github.com/AlexStocks/log4go"
@@ -66,7 +65,7 @@ func initServer() {
 		panic(jerrors.ErrorStack(err))
 		return
 	}
-	err = server.Register(&micro_examples.TestService{})
+	err = server.Register(&TestService{})
 	if err != nil {
 		panic(jerrors.ErrorStack(err))
 		return

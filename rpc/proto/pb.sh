@@ -19,3 +19,10 @@ gogopath=~/test/golang/lib/src/
 # protoc -I=$gopath:$gogopath:/Users/alex/test/golang/lib/src/github.com/AlexStocks/goext/database/redis/:./ --gogoslick_out=Mredis_meta.proto="github.com/AlexStocks/goext/database/redis":../app/  response.proto
 # protoc -I=$gopath:$gogopath:./ --gogoslick_out=Mrole.proto="github.com/AlexStocks/goext/database/registry":./src/  service.proto
 protoc -I=$gopath:$gogopath:./ --gogoslick_out=./  service.proto
+
+
+cp ./service.pb.go ../client/app
+cp ./test.go ../client/app
+
+cp ./service.pb.go ../server/app
+cp ./test.go ../server/app
