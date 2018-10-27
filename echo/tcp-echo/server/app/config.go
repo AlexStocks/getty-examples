@@ -11,6 +11,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"time"
@@ -18,7 +19,7 @@ import (
 
 import (
 	log "github.com/AlexStocks/log4go"
-	config "github.com/koding/multiconfig"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
@@ -32,44 +33,44 @@ var (
 
 type (
 	GettySessionParam struct {
-		CompressEncoding bool   `default:"false"`
-		TcpNoDelay       bool   `default:"true"`
-		TcpKeepAlive     bool   `default:"true"`
-		KeepAlivePeriod  string `default:"180s"`
+		CompressEncoding bool   `default:"false" yaml:"compress_encoding" json:"compress_encoding,omitempty"`
+		TcpNoDelay       bool   `default:"true" yaml:"tcp_no_delay" json:"tcp_no_delay,omitempty"`
+		TcpKeepAlive     bool   `default:"true" yaml:"tcp_keep_alive" json:"tcp_keep_alive,omitempty"`
+		KeepAlivePeriod  string `default:"180s" yaml:"keep_alive_period" json:"keep_alive_period,omitempty"`
 		keepAlivePeriod  time.Duration
-		TcpRBufSize      int    `default:"262144"`
-		TcpWBufSize      int    `default:"65536"`
-		PkgRQSize        int    `default:"1024"`
-		PkgWQSize        int    `default:"1024"`
-		TcpReadTimeout   string `default:"1s"`
+		TcpRBufSize      int    `default:"262144" yaml:"tcp_r_buf_size" json:"tcp_r_buf_size,omitempty"`
+		TcpWBufSize      int    `default:"65536" yaml:"tcp_w_buf_size" json:"tcp_w_buf_size,omitempty"`
+		PkgRQSize        int    `default:"1024" yaml:"pkg_rq_size" json:"pkg_rq_size,omitempty"`
+		PkgWQSize        int    `default:"1024" yaml:"pkg_wq_size" json:"pkg_wq_size,omitempty"`
+		TcpReadTimeout   string `default:"1s" yaml:"tcp_read_timeout" json:"tcp_read_timeout,omitempty"`
 		tcpReadTimeout   time.Duration
-		TcpWriteTimeout  string `default:"5s"`
+		TcpWriteTimeout  string `default:"5s" yaml:"tcp_write_timeout" json:"tcp_write_timeout,omitempty"`
 		tcpWriteTimeout  time.Duration
-		WaitTimeout      string `default:"7s"`
+		WaitTimeout      string `default:"7s" yaml:"wait_timeout" json:"wait_timeout,omitempty"`
 		waitTimeout      time.Duration
-		MaxMsgLen        int    `default:"1024"`
-		SessionName      string `default:"echo-server"`
+		MaxMsgLen        int    `default:"1024" yaml:"max_msg_len" json:"max_msg_len,omitempty"`
+		SessionName      string `default:"echo-server" yaml:"session_name" json:"session_name,omitempty"`
 	}
 
 	// Config holds supported types by the multiconfig package
 	Config struct {
 		// local address
-		AppName     string   `default:"echo-server"`
-		Host        string   `default:"127.0.0.1"`
-		Ports       []string `default:["10000"]`
-		ProfilePort int      `default:"10086"`
+		AppName     string   `default:"echo-server" yaml:"app_name" json:"app_name,omitempty"`
+		Host        string   `default:"127.0.0.1" yaml:"host" json:"host,omitempty"`
+		Ports       []string `yaml:"ports" json:"ports,omitempty"` // `default:["10000"]`
+		ProfilePort int      `default:"10086" yaml:"profile_port" json:"profile_port,omitempty"`
 
 		// session
-		SessionTimeout string `default:"60s"`
+		SessionTimeout string `default:"60s" yaml:"session_timeout" json:"session_timeout,omitempty"`
 		sessionTimeout time.Duration
-		SessionNumber  int `default:"1000"`
+		SessionNumber  int `default:"1000" yaml:"session_number" json:"session_number,omitempty"`
 
 		// app
-		FailFastTimeout string `default:"5s"`
+		FailFastTimeout string `default:"5s" yaml:"fail_fast_timeout" json:"fail_fast_timeout,omitempty"`
 		failFastTimeout time.Duration
 
 		// session tcp parameters
-		GettySessionParam GettySessionParam `required:"true"`
+		GettySessionParam GettySessionParam `required:"true" yaml:"getty_session_param" json:"getty_session_param,omitempty"`
 	}
 )
 
@@ -85,12 +86,22 @@ func initConf() {
 		panic(fmt.Sprintf("application configure file name is nil"))
 		return // I know it is of no usage. Just Err Protection.
 	}
-	if path.Ext(confFile) != ".toml" {
-		panic(fmt.Sprintf("application configure file name{%v} suffix must be .toml", confFile))
+	if path.Ext(confFile) != ".yml" {
+		panic(fmt.Sprintf("application configure file name{%v} suffix must be .yml", confFile))
 		return
 	}
-	conf = new(Config)
-	config.MustLoadWithPath(confFile, conf)
+
+	conf = &Config{}
+	confFileStream, err := ioutil.ReadFile(confFile)
+	if err != nil {
+		panic(fmt.Sprintf("ioutil.ReadFile(file:%s) = error:%s", confFile, err))
+		return
+	}
+	err = yaml.Unmarshal(confFileStream, conf)
+	if err != nil {
+		panic(fmt.Sprintf("yaml.Unmarshal() = error:%s", err))
+		return
+	}
 
 	conf.sessionTimeout, err = time.ParseDuration(conf.SessionTimeout)
 	if err != nil {
