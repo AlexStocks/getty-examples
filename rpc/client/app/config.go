@@ -11,9 +11,9 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
-	"io/ioutil"
 )
 
 import (
