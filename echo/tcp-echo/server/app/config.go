@@ -71,6 +71,11 @@ type (
 
 		// session tcp parameters
 		GettySessionParam GettySessionParam `required:"true" yaml:"getty_session_param" json:"getty_session_param,omitempty"`
+
+		// task pool
+		TaskQueueLength int `default:"1024" yaml:"task_queue_length" json:"task_queue_length,omitempty"`
+		TaskQueueNumber int `default:"1024" yaml:"task_queue_number" json:"task_queue_number,omitempty"`
+		TaskPoolSize    int `default:"1024" yaml:"task_pool_size" json:"task_pool_size,omitempty"`
 	}
 )
 

@@ -43,7 +43,7 @@ func initConf() {
 		panic(fmt.Sprintf("application configure file name{%v} suffix must be .yml", confFile))
 		return
 	}
-	
+
 	conf = &rpc.ServerConfig{}
 	confFileStream, err := ioutil.ReadFile(confFile)
 	if err != nil {
@@ -59,7 +59,7 @@ func initConf() {
 		panic(jerrors.ErrorStack(err))
 		return
 	}
-	
+
 	// log
 	confFile = os.Getenv(APP_LOG_CONF_FILE)
 	if confFile == "" {

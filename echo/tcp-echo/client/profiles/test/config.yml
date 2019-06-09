@@ -44,3 +44,7 @@ getty_session_param:
     wait_timeout : "1s"
     max_msg_len : 128
     session_name : "echo-client"
+
+task_queue_length : 1024
+task_queue_number : 20
+task_pool_size : 1000

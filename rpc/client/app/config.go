@@ -29,8 +29,8 @@ const (
 )
 
 type Config struct {
-	ServerHost string `default:"127.0.0.1" yaml:"server_host" json:"server_host,omitempty"`
-	ServerPort int `default:"1234" yaml:"server_port" json:"server_port,omitempty"`
+	ServerHost       string `default:"127.0.0.1" yaml:"server_host" json:"server_host,omitempty"`
+	ServerPort       int    `default:"1234" yaml:"server_port" json:"server_port,omitempty"`
 	rpc.ClientConfig `yaml:"core" json:"core, omitempty"`
 }
 
@@ -51,7 +51,7 @@ func initConf() {
 	}
 
 	conf = &Config{}
-	
+
 	confFileStream, err := ioutil.ReadFile(confFile)
 	if err != nil {
 		panic(fmt.Sprintf("ioutil.ReadFile(file:%s) = error:%s", confFile, jerrors.ErrorStack(err)))
@@ -67,9 +67,9 @@ func initConf() {
 		panic(jerrors.ErrorStack(err))
 		return
 	}
-	if conf.ServerPort < 0  {
+	if conf.ServerPort < 0 {
 		panic("Config.ServerPort < 0")
-	  return
+		return
 	}
 
 	// log

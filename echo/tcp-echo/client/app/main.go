@@ -17,6 +17,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+
 	// "strings"
 	"sync/atomic"
 	"syscall"
@@ -25,9 +26,9 @@ import (
 
 import (
 	"github.com/AlexStocks/getty"
-	"github.com/AlexStocks/goext/log"
-	"github.com/AlexStocks/goext/net"
-	"github.com/AlexStocks/goext/time"
+	gxlog "github.com/AlexStocks/goext/log"
+	gxnet "github.com/AlexStocks/goext/net"
+	gxtime "github.com/AlexStocks/goext/time"
 	log "github.com/AlexStocks/log4go"
 )
 
@@ -40,7 +41,8 @@ const (
 )
 
 var (
-	client EchoClient
+	client   EchoClient
+	taskPool *getty.TaskPool
 )
 
 ////////////////////////////////////////////////////////////////////
@@ -105,12 +107,21 @@ func newSession(session getty.Session) error {
 	session.SetWriteTimeout(conf.GettySessionParam.tcpWriteTimeout)
 	session.SetCronPeriod((int)(conf.heartbeatPeriod.Nanoseconds() / 1e6))
 	session.SetWaitTime(conf.GettySessionParam.waitTimeout)
+	session.SetTaskPool(taskPool)
 	log.Debug("client new session:%s\n", session.Stat())
 
 	return nil
 }
 
 func initClient() {
+	if conf.TaskPoolSize != 0 {
+		taskPool = getty.NewTaskPool(
+			getty.WithTaskPoolTaskPoolSize(conf.TaskPoolSize),
+			getty.WithTaskPoolTaskQueueLength(conf.TaskQueueLength),
+			getty.WithTaskPoolTaskQueueNumber(conf.TaskQueueNumber),
+		)
+	}
+
 	client.gettyClient = getty.NewTCPClient(
 		getty.WithServerAddress(gxnet.HostAddress(conf.ServerHost, conf.ServerPort)),
 		getty.WithConnectionNumber((int)(conf.ConnectionNum)),
@@ -120,6 +131,7 @@ func initClient() {
 
 func uninitClient() {
 	client.close()
+	taskPool.Close()
 }
 
 func initSignal() {

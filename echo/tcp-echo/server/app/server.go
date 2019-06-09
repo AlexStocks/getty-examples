@@ -17,6 +17,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+
 	// "strings"
 	"syscall"
 	"time"
@@ -24,8 +25,8 @@ import (
 
 import (
 	"github.com/AlexStocks/getty"
-	"github.com/AlexStocks/goext/log"
-	"github.com/AlexStocks/goext/net"
+	gxlog "github.com/AlexStocks/goext/log"
+	gxnet "github.com/AlexStocks/goext/net"
 	log "github.com/AlexStocks/log4go"
 )
 
@@ -40,6 +41,7 @@ var (
 
 var (
 	serverList []getty.Server
+	taskPool   *getty.TaskPool
 )
 
 func main() {
@@ -106,6 +108,7 @@ func newSession(session getty.Session) error {
 	session.SetWriteTimeout(conf.GettySessionParam.tcpWriteTimeout)
 	session.SetCronPeriod((int)(conf.sessionTimeout.Nanoseconds() / 1e6))
 	session.SetWaitTime(conf.GettySessionParam.waitTimeout)
+	session.SetTaskPool(taskPool)
 	log.Debug("app accepts new session:%s\n", session.Stat())
 
 	return nil
@@ -117,6 +120,14 @@ func initServer() {
 		portList []string
 		server   getty.Server
 	)
+
+	if conf.TaskPoolSize != 0 {
+		taskPool = getty.NewTaskPool(
+			getty.WithTaskPoolTaskPoolSize(conf.TaskPoolSize),
+			getty.WithTaskPoolTaskQueueLength(conf.TaskQueueLength),
+			getty.WithTaskPoolTaskQueueNumber(conf.TaskQueueNumber),
+		)
+	}
 
 	// if *host == "" {
 	// 	panic("host can not be nil")
@@ -147,6 +158,7 @@ func uninitServer() {
 	for _, server := range serverList {
 		server.Close()
 	}
+	taskPool.Close()
 }
 
 func initSignal() {
