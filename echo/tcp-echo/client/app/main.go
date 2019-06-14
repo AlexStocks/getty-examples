@@ -99,8 +99,8 @@ func newSession(session getty.Session) error {
 
 	session.SetName(conf.GettySessionParam.SessionName)
 	session.SetMaxMsgLen(conf.GettySessionParam.MaxMsgLen)
-	session.SetPkgHandler(NewEchoPackageHandler())
-	session.SetEventListener(newEchoMessageHandler())
+	session.SetPkgHandler(echoPkgHandler)
+	session.SetEventListener(echoMsgHandler)
 	session.SetRQLen(conf.GettySessionParam.PkgRQSize)
 	session.SetWQLen(conf.GettySessionParam.PkgWQSize)
 	session.SetReadTimeout(conf.GettySessionParam.tcpReadTimeout)

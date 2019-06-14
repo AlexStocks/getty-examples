@@ -26,6 +26,9 @@ const (
 
 var (
 	errTooManySessions = errors.New("Too many echo sessions!")
+	hbHandler          = &HeartbeatHandler{}
+	msgHandler         = &MessageHandler{}
+	echoMsgHandler     = newEchoMessageHandler()
 )
 
 type PackageHandler interface {
@@ -79,8 +82,8 @@ type EchoMessageHandler struct {
 
 func newEchoMessageHandler() *EchoMessageHandler {
 	handlers := make(map[uint32]PackageHandler)
-	handlers[heartbeatCmd] = &HeartbeatHandler{}
-	handlers[echoCmd] = &MessageHandler{}
+	handlers[heartbeatCmd] = hbHandler
+	handlers[echoCmd] = msgHandler
 
 	return &EchoMessageHandler{sessionMap: make(map[getty.Session]*clientEchoSession), handlers: handlers}
 }

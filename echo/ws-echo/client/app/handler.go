@@ -21,6 +21,7 @@ import (
 
 var (
 	errSessionNotExist = errors.New("session not exist!")
+	echoMsgHandler     = newEchoMessageHandler()
 )
 
 ////////////////////////////////////////////
@@ -32,8 +33,7 @@ type clientEchoSession struct {
 	reqNum  int32
 }
 
-type EchoMessageHandler struct {
-}
+type EchoMessageHandler struct{}
 
 func newEchoMessageHandler() *EchoMessageHandler {
 	return &EchoMessageHandler{}

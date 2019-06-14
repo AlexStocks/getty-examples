@@ -21,6 +21,7 @@ import (
 
 var (
 	errSessionNotExist = errors.New("session not exist!")
+	echoMsgHandler     = newEchoMessageHandler()
 )
 
 ////////////////////////////////////////////

@@ -17,6 +17,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+
 	// "strings"
 	"syscall"
 	"time"
@@ -24,8 +25,8 @@ import (
 
 import (
 	"github.com/AlexStocks/getty"
-	"github.com/AlexStocks/goext/log"
-	"github.com/AlexStocks/goext/net"
+	gxlog "github.com/AlexStocks/goext/log"
+	gxnet "github.com/AlexStocks/goext/net"
 	log "github.com/AlexStocks/log4go"
 )
 
@@ -94,8 +95,8 @@ func newSession(session getty.Session) error {
 
 	session.SetName(conf.GettySessionParam.SessionName)
 	session.SetMaxMsgLen(conf.GettySessionParam.MaxMsgLen)
-	session.SetPkgHandler(NewEchoPackageHandler())
-	session.SetEventListener(newEchoMessageHandler())
+	session.SetPkgHandler(echoPkgHandler)
+	session.SetEventListener(echoMsgHandler)
 	session.SetRQLen(conf.GettySessionParam.PkgRQSize)
 	session.SetWQLen(conf.GettySessionParam.PkgWQSize)
 	session.SetReadTimeout(conf.GettySessionParam.udpReadTimeout)

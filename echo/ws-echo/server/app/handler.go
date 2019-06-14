@@ -22,6 +22,8 @@ import (
 
 var (
 	errTooManySessions = errors.New("Too many echo sessions!")
+	msgHandler         = &MessageHandler{}
+	echoMsgHandler     = newEchoMessageHandler()
 )
 
 type PackageHandler interface {
@@ -58,7 +60,7 @@ type EchoMessageHandler struct {
 
 func newEchoMessageHandler() *EchoMessageHandler {
 	handlers := make(map[uint32]PackageHandler)
-	handlers[echoCmd] = &MessageHandler{}
+	handlers[echoCmd] = msgHandler
 
 	return &EchoMessageHandler{sessionMap: make(map[getty.Session]*clientEchoSession), handlers: handlers}
 }

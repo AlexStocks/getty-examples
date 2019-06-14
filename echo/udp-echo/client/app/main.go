@@ -25,9 +25,9 @@ import (
 
 import (
 	"github.com/AlexStocks/getty"
-	"github.com/AlexStocks/goext/log"
-	"github.com/AlexStocks/goext/net"
-	"github.com/AlexStocks/goext/time"
+	gxlog "github.com/AlexStocks/goext/log"
+	gxnet "github.com/AlexStocks/goext/net"
+	gxtime "github.com/AlexStocks/goext/time"
 	log "github.com/AlexStocks/log4go"
 )
 
@@ -114,7 +114,7 @@ func newSession(session getty.Session) error {
 
 	session.SetName(sessionName)
 	session.SetMaxMsgLen(conf.GettySessionParam.MaxMsgLen)
-	session.SetPkgHandler(NewEchoPackageHandler())
+	session.SetPkgHandler(echoPkgHandler)
 	session.SetEventListener(newEchoMessageHandler(client))
 	session.SetRQLen(conf.GettySessionParam.PkgRQSize)
 	session.SetWQLen(conf.GettySessionParam.PkgWQSize)
