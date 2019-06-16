@@ -52,13 +52,13 @@ func (c *EchoClient) close() {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if c.gettyClient != nil {
+		c.gettyClient.Close()
+		c.gettyClient = nil
 		for _, s := range c.sessions {
 			log.Info("close client session{%s, last active:%s, request number:%d}",
 				s.session.Stat(), s.session.GetActive().String(), s.reqNum)
 			s.session.Close()
 		}
-		c.gettyClient.Close()
-		c.gettyClient = nil
 		c.sessions = c.sessions[:0]
 	}
 }
