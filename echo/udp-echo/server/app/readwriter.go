@@ -52,7 +52,7 @@ func (h *EchoPackageHandler) Read(ss getty.Session, data []byte) (interface{}, i
 	return &pkg, len, nil
 }
 
-func (h *EchoPackageHandler) Write(ss getty.Session, udpCtx interface{}) error {
+func (h *EchoPackageHandler) Write(ss getty.Session, udpCtx interface{}) ([]byte, error) {
 	var (
 		ok        bool
 		err       error
@@ -65,23 +65,22 @@ func (h *EchoPackageHandler) Write(ss getty.Session, udpCtx interface{}) error {
 	ctx, ok = udpCtx.(getty.UDPContext)
 	if !ok {
 		log.Error("illegal UDPContext{%#v}", udpCtx)
-		return fmt.Errorf("illegal @udpCtx{%#v}", udpCtx)
+		return nil, fmt.Errorf("illegal @udpCtx{%#v}", udpCtx)
 	}
 
 	startTime = time.Now()
 	if echoPkg, ok = ctx.Pkg.(*EchoPackage); !ok {
 		log.Error("illegal pkg:%+v, addr:%s\n", ctx.Pkg, ctx.PeerAddr)
-		return errors.New("invalid echo package!")
+		return nil, errors.New("invalid echo package!")
 	}
 
 	buf, err = echoPkg.Marshal()
 	if err != nil {
 		log.Warn("binary.Write(echoPkg{%#v}) = err{%#v}", echoPkg, err)
-		return err
+		return nil, err
 	}
 
-	_, err = ss.Write(getty.UDPContext{Pkg: buf.Bytes(), PeerAddr: ctx.PeerAddr})
-	log.Info("WriteEchoPkgTimeMs = %s", time.Since(startTime).String())
+	log.Debug("WriteEchoPkgTimeMs = %s", time.Since(startTime).String())
 
-	return err
+	return buf.Bytes(), nil
 }

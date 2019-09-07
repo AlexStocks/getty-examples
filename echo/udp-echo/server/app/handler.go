@@ -72,7 +72,7 @@ type MessageHandler struct{}
 func (h *MessageHandler) Handle(session getty.Session, ctx getty.UDPContext) error {
 	log.Debug("get echo ctx{%#v}", ctx)
 	// write echo message handle logic here.
-	// return session.WritePkg(ctx, WritePkgTimeout)
+	//return session.WritePkg(ctx, WritePkgTimeout)
 	return session.WritePkg(ctx, WritePkgASAP)
 }
 

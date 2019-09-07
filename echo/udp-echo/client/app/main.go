@@ -55,8 +55,8 @@ func main() {
 	initProfiling()
 
 	initClient()
-	log.Info("%s starts successfull! its version=%s\n", conf.AppName, Version)
-	gxlog.CInfo("%s starts successfull! its version=%s\n", conf.AppName, Version)
+	log.Info("%s starts successfull! its version=%s\n", conf.AppName, getty.Version)
+	gxlog.CInfo("%s starts successfull! its version=%s\n", conf.AppName, getty.Version)
 
 	go test()
 

@@ -21,10 +21,14 @@ import (
 )
 
 import (
-	"github.com/AlexStocks/getty/rpc"
 	"github.com/AlexStocks/goext/net"
 	log "github.com/AlexStocks/log4go"
 	jerrors "github.com/juju/errors"
+)
+
+import (
+	"github.com/AlexStocks/getty"
+	"github.com/AlexStocks/getty/rpc"
 )
 
 const (
@@ -45,8 +49,7 @@ func main() {
 	initProfiling()
 
 	initClient()
-	// gxlog.CInfo("%s starts successfull! its version=%s\n", conf.AppName, Version)
-	log.Info("%s starts successfull! its version=%s\n", conf.AppName, Version)
+	log.Info("%s starts successfull! its version=%s\n", conf.AppName, getty.Version)
 
 	go test()
 

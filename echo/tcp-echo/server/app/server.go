@@ -28,6 +28,7 @@ import (
 	gxlog "github.com/AlexStocks/goext/log"
 	gxnet "github.com/AlexStocks/goext/net"
 	log "github.com/AlexStocks/log4go"
+	"github.com/dubbogo/gost/sync"
 )
 
 const (
@@ -41,7 +42,7 @@ var (
 
 var (
 	serverList []getty.Server
-	taskPool   *getty.TaskPool
+	taskPool   *gxsync.TaskPool
 )
 
 func main() {
@@ -56,9 +57,9 @@ func main() {
 
 	initServer()
 	gxlog.CInfo("%s starts successfull! its version=%s, its listen ends=%s:%s\n",
-		conf.AppName, Version, conf.Host, conf.Ports)
+		conf.AppName, getty.Version, conf.Host, conf.Ports)
 	log.Info("%s starts successfull! its version=%s, its listen ends=%s:%s\n",
-		conf.AppName, Version, conf.Host, conf.Ports)
+		conf.AppName, getty.Version, conf.Host, conf.Ports)
 
 	initSignal()
 }
@@ -122,10 +123,10 @@ func initServer() {
 	)
 
 	if conf.TaskPoolSize != 0 {
-		taskPool = getty.NewTaskPool(
-			getty.WithTaskPoolTaskPoolSize(conf.TaskPoolSize),
-			getty.WithTaskPoolTaskQueueLength(conf.TaskQueueLength),
-			getty.WithTaskPoolTaskQueueNumber(conf.TaskQueueNumber),
+		taskPool = gxsync.NewTaskPool(
+			gxsync.WithTaskPoolTaskPoolSize(conf.TaskPoolSize),
+			gxsync.WithTaskPoolTaskQueueLength(conf.TaskQueueLength),
+			gxsync.WithTaskPoolTaskQueueNumber(conf.TaskQueueNumber),
 		)
 	}
 

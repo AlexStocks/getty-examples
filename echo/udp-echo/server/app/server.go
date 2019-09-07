@@ -55,9 +55,9 @@ func main() {
 
 	initServer()
 	gxlog.CInfo("%s starts successfull! its version=%s, its listen ends=%s:%s\n",
-		conf.AppName, Version, conf.Host, conf.Ports)
+		conf.AppName, getty.Version, conf.Host, conf.Ports)
 	log.Info("%s starts successfull! its version=%s, its listen ends=%s:%s\n",
-		conf.AppName, Version, conf.Host, conf.Ports)
+		conf.AppName, getty.Version, conf.Host, conf.Ports)
 
 	initSignal()
 }

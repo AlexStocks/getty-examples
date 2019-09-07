@@ -51,7 +51,7 @@ func (h *EchoPackageHandler) Read(ss getty.Session, data []byte) (interface{}, i
 	return &pkg, len, nil
 }
 
-func (h *EchoPackageHandler) Write(ss getty.Session, pkg interface{}) error {
+func (h *EchoPackageHandler) Write(ss getty.Session, pkg interface{}) ([]byte, error) {
 	var (
 		ok        bool
 		err       error
@@ -63,17 +63,14 @@ func (h *EchoPackageHandler) Write(ss getty.Session, pkg interface{}) error {
 	startTime = time.Now()
 	if echoPkg, ok = pkg.(*EchoPackage); !ok {
 		log.Error("illegal pkg:%+v\n", pkg)
-		return errors.New("invalid echo package!")
+		return nil, errors.New("invalid echo package!")
 	}
 
 	buf, err = echoPkg.Marshal()
 	if err != nil {
 		log.Warn("binary.Write(echoPkg{%#v}) = err{%#v}", echoPkg, err)
-		return err
+		return nil, err
 	}
-
-	err = ss.WriteBytes(buf.Bytes())
-	log.Info("WriteEchoPkgTimeMs = %s", time.Since(startTime).String())
-
-	return err
+	log.Debug("WriteEchoPkgTimeMs = %s", time.Since(startTime).String())
+	return buf.Bytes(), nil
 }
